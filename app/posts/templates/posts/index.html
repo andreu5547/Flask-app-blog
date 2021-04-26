@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Posts index page
+{% endblock %}
+
+{% block content_title %}
+	Posts
+{% endblock %}
+
+{% block content %}
+	{% for post in pages.items %}
+
+		<p>
+			<a href="{{ url_for('posts.post_detail', slug=post.slug) }}">{{ post.title }}</a>
+		</p>
+
+	{% endfor %}
+	<nav aria-label="Page navigation example">
+		<ul class="pagination">
+			{% if pages.has_prev %}
+			<li class="page-item">
+				<a class="page-link" href="./?page={{ pages.prev_num }}" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+			</li>
+			{% endif %}
+
+			{% for page in pages.iter_pages() %}
+				<li {% if page == pages.page %} class="page-item active" {% endif %}><a class="page-link" href="./?page={{ page }}">{{ page }}</a></li>
+			{% endfor %}
+
+			{% if pages.has_next %}
+			<li class="page-item">
+				<a class="page-link" href="./?page={{ pages.next_num }}" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>
+			{% endif %}
+		</ul>
+	</nav>
+{% endblock %}
