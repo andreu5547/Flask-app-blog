@@ -7,10 +7,10 @@ from flask_security import UserMixin, RoleMixin
 
 def slugify(str):  # Генерация slug'a
     pattern = r'[^\w+]'
-    return re.sub(pattern, '-', str).lower()
+    return re.sub(pattern, '-', str.strip()).lower()  # Используем регулярное выражение для генерации slug'a
 
 
-# Таблица соотношения пост - тег
+# Таблица соотношения посты - теги
 post_tags = db.Table('post_tags',
                      db.Column('post_id', db.Integer(), db.ForeignKey('post.id')),
                      db.Column('tag_id', db.Integer(), db.ForeignKey('tag.id'))
@@ -28,6 +28,7 @@ class Post(db.Model):  # Таблица постов
         super(Post, self).__init__(*args, **kwargs)
         self.generate_slug()
 
+    # Создаём связь "Посты - теги"
     tags = db.relationship('Tag', secondary=post_tags, backref=db.backref('posts', lazy='dynamic'))
 
     def generate_slug(self):
@@ -56,7 +57,7 @@ class Tag(db.Model):
 
 
 ##################################### Flask_security ###################################################################
-# Таблица соотношения роль - пользователь
+# Таблица соотношения роли - пользователи
 roles_users = db.Table('roles_users',
                        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
                        db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
@@ -69,6 +70,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
+    # Создаём связь "Пользователи - роли"
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
 

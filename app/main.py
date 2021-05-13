@@ -5,5 +5,5 @@ from posts.blueprint import posts
 
 app.register_blueprint(posts, url_prefix='/blog')  # Регестрируем созданный blueprint
 
-if __name__ == '__main__':  # MAIN
+if __name__ == '__main__':  # MAIN, запуск приложения
     app.run(debug=True, host='0.0.0.0')
